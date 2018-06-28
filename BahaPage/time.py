@@ -6,11 +6,12 @@ from .user import User
 class Time(object):
 
     def __init__(self, article, html):
-        self.article = article
-        timeHtml = re.search('<td class=\"b-list__time\">.*?</td>', html, flags=re.DOTALL).group(0)
-        self.replyTime = self.timePreprocess(re.search('>.*</a>', timeHtml).group(0)[1:-4])
-        userHtml = re.search('<p class=\"b-list__time__user\">.*?</p>', timeHtml, flags=re.DOTALL).group(0)
-        self.user = User(userHtml)
+        if article and html:
+            self.article = article
+            timeHtml = re.search('<td class=\"b-list__time\">.*?</td>', html, flags=re.DOTALL).group(0)
+            self.replyTime = self.timePreprocess(re.search('>.*</a>', timeHtml).group(0)[1:-4])
+            userHtml = re.search('<p class=\"b-list__time__user\">.*?</p>', timeHtml, flags=re.DOTALL).group(0)
+            self.user = User(userHtml)
 
     def timePreprocess(self, timeStr):
         time = datetime.today()
@@ -29,4 +30,11 @@ class Time(object):
 
     def toJson(self):
         return {'replyTime': self.replyTime, 'user': self.user.toJson()}
+
+    @staticmethod
+    def fromJson(doc):
+        time = Time(None, None)
+        time.replyTime = doc['replyTime']
+        time.user = User.fromJson(doc['user'])
+        return time
 
