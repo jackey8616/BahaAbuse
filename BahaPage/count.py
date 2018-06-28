@@ -4,7 +4,8 @@ from .user import User
 
 class Count(object):
 
-    def __init__(self, html):
+    def __init__(self, article, html):
+        self.arcticle = article
         countHtml = re.search('<td class=\"b-list__count\">.*?</td>', html, flags=re.DOTALL).group(0)
         reply = re.search('<p class=\"b-list__count__number\">.*?</p>', countHtml, flags=re.DOTALL).group(0)
         self.reply = int(reply.split('</span>/\n<span>')[0][40:])

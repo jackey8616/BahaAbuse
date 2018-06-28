@@ -2,7 +2,8 @@ import re
 
 class Main(object):
 
-    def __init__(self, html):
+    def __init__(self, article, html):
+        self.article = article
         mainHtml = re.search('<td class=\"b-list__main\">.*?</td>', html, flags=re.DOTALL).group(0)
         if 'href' in mainHtml:
             self.title = re.search('>.*?</a>', mainHtml).group(0)[1:-4]

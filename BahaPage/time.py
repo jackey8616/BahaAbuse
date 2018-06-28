@@ -5,7 +5,8 @@ from .user import User
 
 class Time(object):
 
-    def __init__(self, html):
+    def __init__(self, article, html):
+        self.article = article
         timeHtml = re.search('<td class=\"b-list__time\">.*?</td>', html, flags=re.DOTALL).group(0)
         self.replyTime = self.timePreprocess(re.search('>.*</a>', timeHtml).group(0)[1:-4])
         userHtml = re.search('<p class=\"b-list__time__user\">.*?</p>', timeHtml, flags=re.DOTALL).group(0)

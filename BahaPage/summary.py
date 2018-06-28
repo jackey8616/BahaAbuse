@@ -2,7 +2,8 @@ import re
 
 class Summary(object):
 
-    def __init__(self, html):
+    def __init__(self, article, html):
+        self.article = article
         summaryHtml = re.search('<td class=\"b-list__summary\">.*?</td>', html, flags=re.DOTALL).group(0)
         self.rowSticky = 'row--sticky' in html
         self.summaryId = int(re.search('data-subbsn=\".*?"', summaryHtml).group(0)[13:-1])
