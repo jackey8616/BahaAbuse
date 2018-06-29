@@ -67,9 +67,9 @@ class Article(object):
         return article
 
     def keyJson(self):
-        keyJson = {
-            'detail': self.detail
-        }
+        keyJson = {}
+        for key, val in self.detail.items():
+            keyJson['detail.' + key] = val
         for key, val in self.summary.toJson().items():
             keyJson['summary.' + key] = val
         for key, val in self.main.toJson().items():

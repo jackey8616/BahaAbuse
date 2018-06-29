@@ -17,39 +17,45 @@ crawler = Crawler(db, 'Minecraft', 'https://forum.gamer.com.tw/B.php?bsn=18673&s
 async def index(request):
     return json({"hello": "world"})
 
+# Article list data in Crawler right now
 @app.route('/api/article-list')
 async def articleList(request):
     query = request.raw_args
     res = {'subboards': {}, 'articles': []}
-    #if '_id' in query.keys():
-    #    query['_id'] = ObjectId(query['_id'])
-    #cursor = db.Minecraft.find(query).limit(30)
-    #for doc in cursor:
-    #    doc['_id'] = str(doc['_id'])
-    #    res.append(doc)
     for index, val in crawler.bPage.subboards.items():
         res['subboards'][index] = val
     for each in crawler.bPage.articles:
         res['articles'].append(each.toJson())
     return json({'response': res})
 
+# Article data from DB 
 @app.route('/api/article')
 async def article(request):
     query = {}
-    res = {'subboards': {}, 'article': []}
+    res = {'subboards': {}, 'article': {}}
+
+    # Add subboard array
     for index, val in crawler.bPage.subboards.items():
         res['subboards'][index] = val
+    # Build MongoDB query string
     for key, val in request.raw_args.items():
         query['detail.' + key] = int(val) if key != 'php' else val
+
     res['article'] = db.Minecraft.find_one(query)
-    if res['article']['content']['html'] == 'None':
+    del res['article']['_id']  # Remove Unconvertable ObjectId
+
+    if res['article']['content']['header'] == 'None':
         print('Crawling content...')
         art = Article.fromJson(res['article'])
         art.crawlContent()
-        db.Minecraft.update(query, {"$set": {"content": art.content.toJson()}}, upsert=False)
-        res['article'].update(art.toJson())
+        art.content.htmlFilte()
+        db.Minecraft.update(query, {"$set": art.toJson()}, upsert=False)
         res['article'] = art.toJson()
     return json({'response': res})
+
+@app.route('/api/article-compare', methods=['POST'])
+async def articleCompare(request):
+    return json({'response': 'test'})
 
 if __name__ == '__main__':
     crawler.start()
