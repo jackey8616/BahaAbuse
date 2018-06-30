@@ -7,7 +7,10 @@ from sanic_cors import CORS, cross_origin
 from crawler import Crawler
 from BahaPage.article import Article
 
-mongo = MongoClient('mongodb://localhost:27017/')
+# If use docker container to host mongodb
+#   'mongodb' show be the host link to mongo container
+# Or it should put the host(IP) of mongodb.
+mongo = MongoClient('mongodb', 27017)
 db = mongo['BahaAbuse']
 app = Sanic(__name__)
 cors = CORS(app, resources={r'/api/*': {'origins': '*'}})
@@ -59,6 +62,6 @@ async def articleCompare(request):
 
 if __name__ == '__main__':
     crawler.start()
-    app.run()
+    app.run(host='0.0.0.0')
     crawler.stopped.set()
     

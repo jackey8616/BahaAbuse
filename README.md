@@ -18,7 +18,7 @@ docker build -t baha-abuse-backend:latest .
 ```
 
 ### Run Image
+> This image is on DockerHub and maintain by me.  
 ```sh
-docker run -ti -d -p 127.0.0.1:8000:8000 --restart always baha-abuse-backend:latest
+docker run -ti -p 8000:8000 --link=<mongo_container_name>:mongodb --restart always -d clooooode/baha-abuse-backend
 ```
-
