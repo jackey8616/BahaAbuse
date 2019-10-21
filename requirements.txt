@@ -11,6 +11,6 @@ Sanic-Cors==0.9.4
 Sanic-Plugins-Framework==0.6.2.dev20180617
 simhash==1.9.0
 ujson==1.35
-urllib3==1.23
+urllib3==1.24.2
 uvloop==0.10.2
 websockets==5.0.1
